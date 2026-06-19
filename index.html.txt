@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarCoin</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: sans-serif;
+            background: #1e1e1e;
+            color: white;
+            text-align: center;
+            user-select: none;
+        }
+        #coin {
+            font-size: 80px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 40px;
+        }
+        .shop-item {
+            background: #333;
+            margin: 10px;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .shop-item button {
+            background: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Баланс: <span id="bal">0</span> ⭐</h2>
+
+    <button id="coin">⭐</button>
+
+    <h3>Магазин</h3>
+    <div class="shop-item">
+        <span>🎩 Шляпа — 100 ⭐</span>
+        <button onclick="buy(100)">Купить</button>
+    </div>
+
+    <script>
+        const tg = Telegram.WebApp;
+        tg.expand();
+        let balance = 0;
+
+        document.getElementById("coin").onclick = () => {
+            balance++;
+            document.getElementById("bal").innerText = balance;
+            tg.HapticFeedback.impactOccurred("light");
+            tg.sendData(JSON.stringify({ action: "click" }));
+        };
+
+        function buy(price) {
+            if (balance >= price) {
+                balance -= price;
+                document.getElementById("bal").innerText = balance;
+                tg.sendData(JSON.stringify({ action: "buy", price: price }));
+            } else {
+                tg.showPopup({ title: "Ошибка", message: "Недостаточно монет" });
+            }
+        }
+
+        tg.ready();
+    </script>
+</body>
+</html>
