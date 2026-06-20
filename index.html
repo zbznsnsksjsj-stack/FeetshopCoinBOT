@@ -432,24 +432,7 @@ let power = 1;
     if (page === 'market') renderMarket();
 }
 
-    document.getElementById('clickerPage').style.display =
-        page === 'clicker' ? 'flex' : 'none';
 
-
-}
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-
-    if (page === 'market') document.querySelectorAll('.tab')[0].classList.add('active');
-if (page === 'clicker') document.querySelectorAll('.tab')[1].classList.add('active');
-if (page === 'shop') document.querySelectorAll('.tab')[2].classList.add('active');
-if (page === 'inv') document.querySelectorAll('.tab')[3].classList.add('active');
-if (page === 'top') document.querySelectorAll('.tab')[4].classList.add('active');
-
-    if (page === 'shop') renderShop();
-    if (page === 'inv') renderInventory();
-    if (page === 'top') renderTop();
-    if (page === 'market') renderMarket();
-}
 
         // ========== КЛИК ==========
         function clickHeart(e) {
