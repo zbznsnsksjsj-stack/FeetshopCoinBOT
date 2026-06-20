@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #1a1a1a;
+    background: #081c15;
             color: white;
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
@@ -19,8 +19,8 @@
 
         /* Вкладки */
         .tabs {
-            display: flex;
-            background: #111;
+    background: #0b2e20;
+}
             position: sticky;
             top: 0;
             z-index: 10;
@@ -28,18 +28,18 @@
         .tab {
             flex: 1;
             padding: 12px;
-            background: #222;
+            background: #123524;
             border: none;
-            color: #888;
+            color: #9fd3b3;
             font-size: 14px;
             cursor: pointer;
             transition: 0.2s;
         }
         .tab.active {
-            background: #333;
-            color: #FFD700;
-            border-bottom: 2px solid #FFD700;
-        }
+    background: #1b5e3b;
+    color: #4ade80;
+    border-bottom: 2px solid #4ade80;
+}
 
         /* Кликер */
         #clickerPage {
@@ -58,7 +58,7 @@
         .balance {
             font-size: 40px;
             font-weight: bold;
-            color: #FFD700;
+            color:  #4ade80;
         }
         .power {
             font-size: 14px;
@@ -78,7 +78,7 @@
             padding: 15px;
         }
         .shop-item {
-            background: #222;
+            background: #123524;;
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 10px;
@@ -111,7 +111,7 @@
             margin-top: 5px;
         }
         .buy-btn {
-            background: #4CAF50;
+            background: #22c55e;
             border: none;
             color: white;
             padding: 10px 15px;
@@ -122,7 +122,7 @@
             white-space: nowrap;
             margin-left: 10px;
         }
-        .buy-btn:active { background: #388E3C; }
+        .buy-btn:active { background: #16a34a; }
         .buy-btn.max {
             background: #555;
             color: #999;
@@ -134,7 +134,7 @@
             padding: 15px;
         }
         .inv-item {
-            background: #222;
+            background: #123524;
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 10px;
@@ -158,7 +158,7 @@
             pointer-events: none;
             font-size: 24px;
             font-weight: bold;
-            color: #FFD700;
+            color: #4ade80;
             animation: floatUp 0.8s ease-out forwards;
         }
         @keyframes floatUp {
@@ -182,7 +182,7 @@
             <div class="balance" id="balance">0 ⭐</div>
             <div class="power" id="power">Сила: 1</div>
         </div>
-        <div class="heart" id="heart" onclick="clickHeart(event)">❤️</div>
+        <div class="heart" id="heart" onclick="clickHeart(event)">🟢</div>
     </div>
 
     <!-- Магазин -->
