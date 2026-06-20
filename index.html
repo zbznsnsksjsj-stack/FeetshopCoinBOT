@@ -1,69 +1,17 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body { 
-            background-color: #1a1a1a !important; 
-            color: white; font-family: sans-serif; 
-            margin: 0; display: flex; flex-direction: column; align-items: center; 
-            height: 100vh; overflow: hidden;
-            -webkit-tap-highlight-color: transparent; /* Убирает блики при нажатии */
-        }
-        .tab { display: none; width: 100%; height: 80%; flex-direction: column; align-items: center; justify-content: center; }
-        .active { display: flex; }
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    
+    // Получаем баланс из URL (параметр ?balance=...)
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get('balance')) || 0;
+    
+    document.getElementById('score').innerText = score + " ⭐";
 
-        /* Чистое сердечко без фона */
-        .heart { 
-            font-size: 120px; 
-            cursor: pointer; 
-            user-select: none; 
-            transition: transform 0.1s;
-            background: none !important;
-            border: none !important;
-        }
-        .heart:active { transform: scale(0.85); }
-
-        .shop-item { background: #2a2a2a; margin: 10px; padding: 15px; border-radius: 15px; width: 80%; display: flex; justify-content: space-between; align-items: center; }
-        button { padding: 10px 15px; border-radius: 10px; border: none; background: #ff4d4d; color: white; font-weight: bold; }
-        .nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 20px; background: #000; }
-    </style>
-</head>
-<body>
-
-    <div id="clicker" class="tab active">
-        <div id="score" style="font-size: 30px; margin-bottom: 20px;">0 ⭐</div>
-        <div class="heart" onclick="clickHeart()">❤️</div>
-    </div>
-
-    <div id="shop" class="tab">
-        <h2>🛒 Магазин</h2>
-        <div class="shop-item">💍 Наперсток <button onclick="buy('thimble')">100 ⭐</button></div>
-        <div class="shop-item">🖱️ Мышь <button onclick="buy('mouse')">500 ⭐</button></div>
-        <div class="shop-item">☕ Кофе <button onclick="buy('coffee')">1000 ⭐</button></div>
-    </div>
-
-    <div class="nav">
-        <button onclick="switchTab('clicker')">👆 Кликер</button>
-        <button onclick="switchTab('shop')">🛒 Магазин</button>
-    </div>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        let score = 0;
-        function clickHeart() {
-            score++;
-            document.getElementById('score').innerText = score + " ⭐";
-            tg.sendData(JSON.stringify({action: "click"}));
-        }
-        function buy(item) { tg.sendData(JSON.stringify({action: "buy_" + item})); }
-        function switchTab(id) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-    </script>
-</body>
-</html>
+    function clickHeart() {
+        score++;
+        document.getElementById('score').innerText = score + " ⭐";
+        tg.sendData(JSON.stringify({action: "click"}));
+    }
+    // ... остальной код (стили и функции) ...
+</script>
