@@ -288,6 +288,11 @@
 <body>
     <!-- Вкладки -->
     <div class="tabs">
+
+    <button class="tab" onclick="showPage('market')">
+        📈<br>Биржа
+    </button>
+
     <button class="tab active" onclick="showPage('clicker')">
         ⭐<br>Кликер
     </button>
@@ -303,6 +308,17 @@
     <button class="tab" onclick="showPage('top')">
         🏆<br>ТОП
     </button>
+
+</div>
+
+    <div id="marketPage" style="display:none;padding:15px;">
+
+    <h2 style="color:#4ade80;margin-bottom:15px;">
+        📈 Биржа DS
+    </h2>
+
+    <div id="marketList"></div>
+
 </div>
 
     <!-- Кликер -->
@@ -332,6 +348,15 @@
 <div id="topPage" style="display:none;padding:15px;">
     <h2 style="color:#FFD700;">🏆 ТОП 50 ИГРОКОВ</h2>
     <div id="topPlayers"></div>
+</div>
+<div id="marketPage" style="display:none;padding:15px;">
+
+    <h2 style="color:#4ade80;">
+        📈 Биржа DS
+    </h2>
+
+    <div id="marketList"></div>
+
 </div>
 
     <script>
@@ -394,16 +419,21 @@ let power = 1;
     document.getElementById('topPage').style.display =
         page === 'top' ? 'block' : 'none';
 
+     document.getElementById('marketPage').style.display =
+    page === 'market' ? 'block' : 'none';
+
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 
-    if (page === 'clicker') document.querySelectorAll('.tab')[0].classList.add('active');
-    if (page === 'shop') document.querySelectorAll('.tab')[1].classList.add('active');
-    if (page === 'inv') document.querySelectorAll('.tab')[2].classList.add('active');
-    if (page === 'top') document.querySelectorAll('.tab')[3].classList.add('active');
+    if (page === 'market') document.querySelectorAll('.tab')[0].classList.add('active');
+if (page === 'clicker') document.querySelectorAll('.tab')[1].classList.add('active');
+if (page === 'shop') document.querySelectorAll('.tab')[2].classList.add('active');
+if (page === 'inv') document.querySelectorAll('.tab')[3].classList.add('active');
+if (page === 'top') document.querySelectorAll('.tab')[4].classList.add('active');
 
     if (page === 'shop') renderShop();
     if (page === 'inv') renderInventory();
     if (page === 'top') renderTop();
+    if (page === 'market') renderMarket();
 }
 
         // ========== КЛИК ==========
@@ -528,6 +558,73 @@ function openDonate(){
     Telegram.WebApp.openLink(
         "https://твоя-ссылка-сбп"
     );
+}
+
+function renderMarket(){
+
+    let html = "";
+
+    const sellers = [
+        {name:"DS_Trader", ds:125000, price:0.08},
+        {name:"CryptoCat", ds:85000, price:0.11},
+        {name:"LuckyFeet", ds:40000, price:0.15},
+        {name:"DarkSeller", ds:65000, price:0.19},
+        {name:"MarketKing", ds:210000, price:0.25},
+        {name:"RichBoy", ds:180000, price:0.31},
+        {name:"WhaleDS", ds:300000, price:0.50}
+    ];
+
+    sellers.forEach(s => {
+
+        html += `
+        <div style="
+            background:#123524;
+            padding:15px;
+            margin-bottom:10px;
+            border-radius:15px;
+            text-align:left;
+        ">
+            <div style="font-size:18px;font-weight:bold;">
+                👤 ${s.name}
+            </div>
+
+            <div style="color:#4ade80;margin-top:5px;">
+                Баланс: ${s.ds.toLocaleString()} DS
+            </div>
+
+            <div style="color:#ffd700;margin-top:5px;">
+                100 DS = $${s.price}
+            </div>
+
+            <button
+                style="
+                    margin-top:10px;
+                    width:100%;
+                    padding:10px;
+                    border:none;
+                    border-radius:10px;
+                    background:#22c55e;
+                    color:white;
+                    font-weight:bold;
+                "
+                onclick="buyDS('${s.name}',${s.price})"
+            >
+                Купить от 100 DS
+            </button>
+        </div>
+        `;
+    });
+
+    document.getElementById("marketList").innerHTML = html;
+}
+
+function buyDS(name, price){
+
+    tg.showPopup({
+        title:"Покупка DS",
+        message:`Продавец: ${name}\n100 DS = $${price}`
+    });
+
 }
 
         // ========== ЗАПУСК ==========
