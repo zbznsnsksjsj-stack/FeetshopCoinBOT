@@ -2,76 +2,208 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarCoin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FeetShop Coin</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            margin: 0; padding: 0;
-            font-family: sans-serif;
-            background: #1e1e1e;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
             color: white;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
             user-select: none;
         }
-        #coin {
-            font-size: 80px;
+
+        /* Заголовок и баланс (визуальный) */
+        .header {
+            position: absolute;
+            top: 10%;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+
+        .balance {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        /* Кнопка клика */
+        .clicker-btn {
+            font-size: 100px;
             background: none;
             border: none;
             cursor: pointer;
-            margin-top: 40px;
+            outline: none;
+            transition: transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            z-index: 10;
         }
-        .shop-item {
-            background: #333;
-            margin: 10px;
-            padding: 12px;
-            border-radius: 12px;
+
+        .clicker-btn:active {
+            transform: scale(0.9);
         }
-        .shop-item button {
-            background: #4CAF50;
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
+
+        /* Анимация вылетающих элементов */
+        .flying-item {
+            position: absolute;
+            font-size: 30px;
+            pointer-events: none;
+            animation: flyUp 1s ease-out forwards;
+            z-index: 5;
         }
-    </style>
-</head>
-<body>
-    <h2>Баланс: <span id="bal">0</span> ⭐</h2>
 
-    <button id="coin">⭐</button>
-
-    <h3>Магазин</h3>
-    <div class="shop-item">
-        <span>🎩 Шляпа — 100 ⭐</span>
-        <button onclick="buy(100)">Купить</button>
-    </div>
-
-    <script>
-        const tg = Telegram.WebApp;
-        tg.expand();
-        let balance = 0;
-
-        document.getElementById("coin").onclick = () => {
-            balance++;
-            document.getElementById("bal").innerText = balance;
-            tg.HapticFeedback.impactOccurred("light");
-            tg.sendData(JSON.stringify({ action: "click" }));
-        };
-
-        function buy(price) {
-            if (balance >= price) {
-                balance -= price;
-                document.getElementById("bal").innerText = balance;
-                tg.sendData(JSON.stringify({ action: "buy", price: price }));
-            } else {
-                tg.showPopup({ title: "Ошибка", message: "Недостаточно монет" });
+        @keyframes flyUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-150px) scale(1.5);
             }
         }
 
-        tg.ready();
+        /* Таймер кофе */
+        .coffee-timer {
+            position: absolute;
+            bottom: 15%;
+            font-size: 18px;
+            color: #ff9900;
+            background: rgba(255, 153, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: none; /* Скрыт по умолчанию */
+            border: 1px solid #ff9900;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="title">FeetShop Coin</div>
+        <div class="balance" id="score">0 ⭐</div>
+    </div>
+
+    <button class="clicker-btn" id="clickBtn">👆</button>
+
+    <div class="coffee-timer" id="coffeeTimer">☕ Буст x2: <span id="timerText">00:00</span></div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на весь экран
+
+        let score = 0;
+        let clickCount = 0;
+        
+        const clickBtn = document.getElementById('clickBtn');
+        const scoreDisplay = document.getElementById('score');
+
+        // Функция для создания вылетающих эмодзи (анимация)
+        function createFlyingItem(x, y, emoji, textClass = '') {
+            const item = document.createElement('div');
+            item.className = `flying-item ${textClass}`;
+            item.innerText = emoji;
+            
+            // Немного рандомизируем позицию вылета
+            const offsetX = (Math.random() - 0.5) * 40;
+            item.style.left = `${x - 15 + offsetX}px`;
+            item.style.top = `${y - 15}px`;
+            
+            document.body.appendChild(item);
+            
+            // Удаляем элемент после завершения анимации
+            setTimeout(() => {
+                item.remove();
+            }, 1000);
+        }
+
+        // Обработчик клика
+        clickBtn.addEventListener('pointerdown', (e) => {
+            clickCount++;
+            
+            // Базовые координаты клика (или центр экрана, если клик программный)
+            const x = e.clientX || window.innerWidth / 2;
+            const y = e.clientY || window.innerHeight / 2;
+
+            let flyingEmoji = "⭐";
+            let pointsEarned = 1;
+
+            // Логика визуалов (имитация того, что происходит в боте)
+            
+            // 1. Проверка на Фокусника (Шляпа) - каждый 100-й клик
+            if (clickCount % 100 === 0) {
+                flyingEmoji = "🐇";
+                pointsEarned = 10;
+                tg.HapticFeedback.notificationOccurred('success'); // Вибрация успеха
+            } 
+            // 2. Проверка на Крит (Разряд-Кольцо) - шанс ~10% визуально
+            else if (Math.random() < 0.10) {
+                flyingEmoji = "⚡";
+                pointsEarned = 3;
+                tg.HapticFeedback.impactOccurred('heavy'); // Сильная вибрация
+            } 
+            // 3. Обычный клик
+            else {
+                tg.HapticFeedback.impactOccurred('light'); // Легкая вибрация
+            }
+
+            // Визуально увеличиваем счет (бот в базе сам всё перепроверит)
+            score += pointsEarned;
+            scoreDisplay.innerText = `${score} ⭐`;
+
+            // Запускаем анимацию
+            createFlyingItem(x, y, flyingEmoji);
+
+            // Отправляем сигнал боту
+            // Поскольку отправка данных каждую миллисекунду может заблокировать бота, 
+            // WebApp обычно использует sendData только для закрытия. 
+            // Если ты хочешь, чтобы приложение не закрывалось, бот должен обрабатывать это через inline,
+            // но мы оставляем отправку для совместимости с твоим кодом.
+            try {
+                tg.sendData(JSON.stringify({action: "click", power: pointsEarned}));
+            } catch (err) {
+                console.log("Запущено не в Telegram или sendData не поддерживается в этом режиме.");
+            }
+        });
+
+        // ПАСХАЛКА / ДЕМО: Как включить таймер кофе программно из консоли браузера
+        // Для теста: startCoffeeBoost(900)
+        function startCoffeeBoost(seconds) {
+            const timerDiv = document.getElementById('coffeeTimer');
+            const timerText = document.getElementById('timerText');
+            timerDiv.style.display = 'block';
+            
+            let timeLeft = seconds;
+            
+            const interval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    timerDiv.style.display = 'none';
+                    return;
+                }
+                
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                timerText.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+                timeLeft--;
+            }, 1000);
+        }
     </script>
 </body>
 </html>
