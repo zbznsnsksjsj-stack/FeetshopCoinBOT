@@ -28,17 +28,20 @@
         .heart {
             font-size: 120px;
             cursor: pointer;
-            user-select: none;
             transition: transform 0.1s;
         }
-        .heart:active {
-            transform: scale(0.85);
+        .heart:active { transform: scale(0.85); }
+        .loading {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">Загрузка баланса...</div>
     <div id="score">0 ⭐</div>
-    <div class="heart" onclick="clickHeart()">❤️</div>
+    <div class="heart" id="heart" onclick="clickHeart()" style="display:none;">❤️</div>
 
     <script>
         const tg = Telegram.WebApp;
@@ -47,30 +50,44 @@
 
         let score = 0;
 
-        // 1. Пробуем взять баланс из URL (если бот передал)
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlBalance = parseInt(urlParams.get('balance'));
-        if (urlBalance && urlBalance > 0) {
-            score = urlBalance;
-            document.getElementById('score').innerText = score + " ⭐";
+        // Функция загрузки баланса
+        function loadBalance() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('heart').style.display = 'none';
+            
+            // Отправляем запрос боту
+            tg.sendData(JSON.stringify({ action: "get_balance" }));
+            
+            // Ждём и проверяем URL
+            setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                const bal = parseInt(params.get('balance'));
+                if (bal && bal > 0) {
+                    score = bal;
+                    document.getElementById('score').innerText = score + " ⭐";
+                }
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('heart').style.display = 'block';
+            }, 500);
         }
 
-        // 2. Запрашиваем актуальный баланс у бота
-        tg.sendData(JSON.stringify({ action: "get_balance" }));
-
-        // 3. Ждём ответ от бота и обновляем
-        const originalFetch = window.fetch;
-        // Слушаем сообщения через Telegram WebApp
-        setInterval(() => {
-            // Баланс обновится при следующем открытии через URL
-        }, 1000);
-
+        // Клик
         function clickHeart() {
             score++;
             document.getElementById('score').innerText = score + " ⭐";
             tg.HapticFeedback.impactOccurred('medium');
             tg.sendData(JSON.stringify({ action: "click" }));
         }
+
+        // Загружаем баланс при открытии
+        loadBalance();
+
+        // Перезагружаем при возвращении в приложение
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                loadBalance();
+            }
+        });
     </script>
 </body>
 </html>
