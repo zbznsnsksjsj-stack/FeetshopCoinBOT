@@ -18,25 +18,75 @@
         }
 
         /* Вкладки */
-        .tabs {
-    display: flex;
-    gap: 8px;
-    padding: 10px;
-    background: #0b2e20;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+.tabs{
+    display:flex;
+    gap:10px;
+    padding:12px;
+    background:#081c15;
+    position:sticky;
+    top:0;
+    z-index:100;
 }
-        .tab.active {
-    background: linear-gradient(135deg,#22c55e,#16a34a);
-    color: white;
-    box-shadow: 0 0 15px rgba(34,197,94,0.4);
-    border-bottom: none;
+
+.tab{
+    flex:1;
+    border:none;
+    border-radius:18px;
+    padding:16px 10px;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+
+    background:linear-gradient(
+        180deg,
+        #1b4332 0%,
+        #0d2818 100%
+    );
+
+    color:#d8ffe7;
+
+    box-shadow:
+        0 6px 0 #081c15,
+        0 10px 20px rgba(0,0,0,.35);
+
+    transition:.15s;
 }
-        .tab.active {
-    background: #1b5e3b;
-    color: #4ade80;
-    border-bottom: 2px solid #4ade80;
+
+.tab.active{
+    background:linear-gradient(
+        180deg,
+        #22c55e 0%,
+        #16a34a 100%
+    );
+    color:white;
+    box-shadow:
+        0 0 25px rgba(34,197,94,.8),
+        0 8px 0 #14532d;
+    transform:translateY(-3px);
+}
+
+.tab:hover{
+    transform:translateY(-4px) scale(1.04);
+}
+
+.tab:active{
+    transform:translateY(2px) scale(.97);
+}
+
+@keyframes jump{
+    0%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-5px);
+    }
+    100%{
+        transform:translateY(0);
+    }
+}
+
+.tab{
+    animation:jump 2s infinite;
 }
 
         /* Кликер */
@@ -171,10 +221,10 @@
 <body>
     <!-- Вкладки -->
     <div class="tabs">
-        <button class="tab active" onclick="showPage('clicker')">⭐ Кликер</button>
-<button class="tab" onclick="showPage('shop')">🛒 Магазин</button>
-<button class="tab" onclick="showPage('inv')">🎒 Инвентарь</button>
-<button class="tab" onclick="showPage('top')">🏆 ТОП</button>
+        <button class="tab active">⭐<br>Кликер</button>
+<button class="tab">🛒<br>Магазин</button>
+<button class="tab">🎒<br>Инвентарь</button>
+<button class="tab">🏆<br>ТОП</button>
     </div>
 
     <!-- Кликер -->
