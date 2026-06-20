@@ -237,6 +237,52 @@
             0% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-80px); }
         }
+
+        .donate-btn{
+    position:fixed;
+    right:15px;
+    bottom:20px;
+
+    width:100px;
+    height:100px;
+
+    border:none;
+    border-radius:50%;
+
+    background:linear-gradient(
+        180deg,
+        #ffd700,
+        #ff9900
+    );
+
+    color:#111;
+    font-size:13px;
+    font-weight:900;
+
+    box-shadow:
+        0 0 20px #ffd700,
+        0 0 40px #ff9900,
+        0 0 60px #ff9900;
+
+    z-index:9999;
+
+    animation:
+        pulseVip 1.2s infinite,
+        shakeVip 4s infinite;
+}
+
+@keyframes pulseVip{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.15); }
+}
+
+@keyframes shakeVip{
+    0%,90%,100%{ rotate:0deg; }
+    92%{ rotate:-4deg; }
+    94%{ rotate:4deg; }
+    96%{ rotate:-4deg; }
+    98%{ rotate:4deg; }
+}
     </style>
 </head>
 <body>
@@ -267,6 +313,9 @@
         </div>
         <div class="heart" id="heart" onclick="clickHeart(event)">💎</div>
     </div>
+    <button class="donate-btn" onclick="openDonate()">
+    ⚡ АВТОКЛИКЕР
+</button>
 
     <!-- Магазин -->
     <div id="shopPage">
@@ -472,6 +521,14 @@ function renderTop() {
     document.getElementById("topPlayers").innerHTML = html;
 }
 
+function openDonate(){
+
+    tg.HapticFeedback.impactOccurred('heavy');
+
+    Telegram.WebApp.openLink(
+        "https://твоя-ссылка-сбп"
+    );
+}
 
         // ========== ЗАПУСК ==========
         loadData();
