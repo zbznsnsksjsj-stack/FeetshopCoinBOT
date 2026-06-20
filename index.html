@@ -1,17 +1,33 @@
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    
-    // Получаем баланс из URL (параметр ?balance=...)
-    const params = new URLSearchParams(window.location.search);
-    let score = parseInt(params.get('balance')) || 0;
-    
-    document.getElementById('score').innerText = score + " ⭐";
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .heart { font-size: 100px; cursor: pointer; user-select: none; }
+    </style>
+</head>
+<body>
+    <div id="score">0 ⭐</div>
+    <div class="heart" onclick="clickHeart()">❤️</div>
 
-    function clickHeart() {
-        score++;
-        document.getElementById('score').innerText = score + " ⭐";
-        tg.sendData(JSON.stringify({action: "click"}));
-    }
-    // ... остальной код (стили и функции) ...
-</script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        // Запрашиваем баланс у бота
+        tg.sendData(JSON.stringify({action: "get_score"}));
+
+        // Слушаем ответ от бота
+        window.Telegram.WebApp.onEvent('mainButtonClicked', function(){});
+
+        function clickHeart() {
+            let s = document.getElementById('score');
+            let val = parseInt(s.innerText) + 1;
+            s.innerText = val + " ⭐";
+            tg.sendData(JSON.stringify({action: "click"}));
+        }
+    </script>
+</body>
+</html>
