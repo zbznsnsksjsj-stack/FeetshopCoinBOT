@@ -329,7 +329,7 @@
         </div>
         <div class="heart" id="heart" onclick="clickHeart(event)">💎</div>
     </div>
-    <button class="donate-btn" onclick="openDonate()">
+    <button id="autoClickerBtn" class="donate-btn" onclick="openDonate()">
     ⚡ АВТОКЛИКЕР
 </button>
 
@@ -421,6 +421,9 @@ let power = 1;
 
      document.getElementById('marketPage').style.display =
     page === 'market' ? 'block' : 'none';
+
+const autoBtn = document.getElementById('autoClickerBtn');
+autoBtn.style.display = page === 'clicker' ? 'block' : 'none';
 
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 
