@@ -1,3 +1,5 @@
+СДелай чтобы значок автокликер был только во вкладке: кликер
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -239,8 +241,6 @@
         }
 
         .donate-btn{
-    display:none;
-
     position:fixed;
     right:15px;
     bottom:20px;
@@ -313,7 +313,16 @@
 
 </div>
 
-    
+    <div id="marketPage" style="display:none;padding:15px;">
+
+    <h2 style="color:#4ade80;margin-bottom:15px;">
+        📈 Биржа DS
+    </h2>
+
+    <div id="marketList"></div>
+
+</div>
+
     <!-- Кликер -->
     <div id="clickerPage">
         <div class="balance-box">
@@ -322,7 +331,7 @@
         </div>
         <div class="heart" id="heart" onclick="clickHeart(event)">💎</div>
     </div>
-    <button id="autoClickerBtn" class="donate-btn" onclick="openDonate()">
+    <button class="donate-btn" onclick="openDonate()">
     ⚡ АВТОКЛИКЕР
 </button>
 
@@ -400,9 +409,6 @@ let power = 1;
         // ========== СТРАНИЦЫ ==========
         function showPage(page) {
 
-    const autoBtn = document.getElementById('autoClickerBtn');
-    autoBtn.style.display = (page === 'clicker') ? 'block' : 'none';
-
     document.getElementById('clickerPage').style.display =
         page === 'clicker' ? 'flex' : 'none';
 
@@ -415,24 +421,22 @@ let power = 1;
     document.getElementById('topPage').style.display =
         page === 'top' ? 'block' : 'none';
 
-    document.getElementById('marketPage').style.display =
-        page === 'market' ? 'block' : 'none';
+     document.getElementById('marketPage').style.display =
+    page === 'market' ? 'block' : 'none';
 
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 
     if (page === 'market') document.querySelectorAll('.tab')[0].classList.add('active');
-    if (page === 'clicker') document.querySelectorAll('.tab')[1].classList.add('active');
-    if (page === 'shop') document.querySelectorAll('.tab')[2].classList.add('active');
-    if (page === 'inv') document.querySelectorAll('.tab')[3].classList.add('active');
-    if (page === 'top') document.querySelectorAll('.tab')[4].classList.add('active');
+if (page === 'clicker') document.querySelectorAll('.tab')[1].classList.add('active');
+if (page === 'shop') document.querySelectorAll('.tab')[2].classList.add('active');
+if (page === 'inv') document.querySelectorAll('.tab')[3].classList.add('active');
+if (page === 'top') document.querySelectorAll('.tab')[4].classList.add('active');
 
     if (page === 'shop') renderShop();
     if (page === 'inv') renderInventory();
     if (page === 'top') renderTop();
     if (page === 'market') renderMarket();
 }
-
-
 
         // ========== КЛИК ==========
         function clickHeart(e) {
@@ -627,7 +631,6 @@ function buyDS(name, price){
 
         // ========== ЗАПУСК ==========
         loadData();
-showPage('clicker');
     </script>
 </body>
 </html>
