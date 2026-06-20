@@ -192,19 +192,24 @@
     </div>
 
     <!-- Инвентарь -->
-    <div id="topPage" style="display:none;padding:15px;">
-    <h2 style="color:#FFD700;margin-bottom:15px;">🏆 ТОП 50 ИГРОКОВ</h2>
-    <div id="topPlayers"></div>
+<div id="invPage">
+    <div id="invItems"></div>
+</div>
 
-    </div>
+<!-- ТОП -->
+<div id="topPage" style="display:none;padding:15px;">
+    <h2 style="color:#FFD700;">🏆 ТОП 50 ИГРОКОВ</h2>
+    <div id="topPlayers"></div>
+</div>
 
     <script>
         const tg = Telegram.WebApp;
         tg.expand();
         tg.ready();
 
-        let score = 0;
-        let power = 1;
+
+       let score = parseInt(localStorage.getItem("score")) || 0;
+let power = 1;
 
         // Товары (синхронизированы с ботом)
         const SHOP = [
@@ -272,6 +277,7 @@
         // ========== КЛИК ==========
         function clickHeart(e) {
             score += power;
+            localStorage.setItem("score", score);
             document.getElementById('balance').innerText = score + ' ⭐';
             tg.HapticFeedback.impactOccurred('medium');
             tg.sendData(JSON.stringify({ action: "click" }));
@@ -330,6 +336,7 @@
             }
 
             score -= price;
+            localStorage.setItem("score", score);
             inventory[itemId] = (inventory[itemId] || 0) + 1;
 
             // Обновляем силу клика
@@ -365,48 +372,23 @@
         }
 function renderTop() {
 
-    let players = [];
+    let html = "";
 
     for(let i = 1; i <= 50; i++) {
 
-        players.push({
-            name: "Игрок_" + i,
-            coins: Math.floor(Math.random() * 500000) + 1000,
-            cps: (Math.random() * 25 + 1).toFixed(1)
-        });
-
-    }
-
-    players.sort((a,b) => b.coins - a.coins);
-
-    let html = "";
-
-    players.forEach((p,index) => {
-
-        let medal = "";
-
-        if(index === 0) medal = "🥇";
-        else if(index === 1) medal = "🥈";
-        else if(index === 2) medal = "🥉";
+        let coins = Math.floor(Math.random()*500000)+1000;
+        let speed = (Math.random()*25+1).toFixed(1);
 
         html += `
-        <div style="
-            background:#222;
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:8px;
-            text-align:left;
-        ">
-            ${medal} <b>#${index+1}</b>
-            ${p.name}<br>
-            💰 ${p.coins.toLocaleString()} ⭐
-            | ⚡ ${p.cps} к/с
-        </div>
-        `;
-    });
+        <div style="background:#222;padding:10px;margin-bottom:8px;border-radius:10px;">
+            #${i} Игрок_${i}<br>
+            💰 ${coins} ⭐ | ⚡ ${speed} к/с
+        </div>`;
+    }
 
     document.getElementById("topPlayers").innerHTML = html;
 }
+
 
         // ========== ЗАПУСК ==========
         loadData();
